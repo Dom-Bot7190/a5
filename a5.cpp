@@ -58,16 +58,35 @@ public:
         }
     }
 
-    void printBoard() {
+    void printBoard() const {
         for(int i=0; i<=sideLength; i++){
             cout << content[i] << '\n';
         }
     }
+    
+    // setter
+    void setPiece(int row, int column, char piece){
+        content[row-'a'+1][column*2] = piece;
+    }
 };
 
-int main(){
+void welcomeMsg(){
     cout << "Order versus Chaos ...\n";
-    board test = board(9);
+
+    cout << "Goal:Achieve 5 alike characters in a row either vertically, horizontally or digonally\n"; 
+    cout << "Instructions:" << endl;
+    cout << "  1. Choose a square grid size between 6 to 9" << endl;
+    cout << "  2. The first player is to enter either an x or o" << endl;
+    cout << "  3. The second player can then place an x or o on the board" << endl;
+    cout << "  4. The players must rotate turns" << endl;
+    cout << "  5. The game is complete after achieving five alike characters in a row" << endl;
+}
+
+int main(){
+    welcomeMsg();
+    board test = board(6);
+    test.printBoard();
+    test.setPiece('b', 5, 'o');
     test.printBoard();
 } // main
 
