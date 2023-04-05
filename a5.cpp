@@ -28,43 +28,46 @@
 // You can use any other C++17 standard #includes that you need.
 //
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 class board {
 private:
     int sideLength;
-    string content;
+    vector<string> content;
 
 public:
-    board(int length): sideLength(length) {
-        content = "  ";
+    board(int length): sideLength(length){
+        content.push_back("  ");
+        // initialize first row
         for(int i=0; i<sideLength; i++){
-            content.push_back('1'+i);
-            content.push_back(' ');
+            content[0].push_back('1'+i);
+            content[0].push_back(' ');
         }
-        content.push_back('\n');
-        // make rows
+        // initialize other rows
         for(int i=0; i<sideLength; i++){
-            // fill each row
-            content.push_back('a'+i);
-            content.push_back(' ');
+            content.push_back("");
+            content[i+1].push_back('a'+i);
+            content[i+1].push_back(' ');
+            // fill rows
             for(int j=0; j<sideLength; j++){
-                content.push_back('.');
-                content.push_back(' ');
+                content[i+1].push_back('.');
+                content[i+1].push_back(' ');
             }
-            content.push_back('\n');
         }
     }
 
     void printBoard() {
-        cout << content << '\n';
+        for(int i=0; i<=sideLength; i++){
+            cout << content[i] << '\n';
+        }
     }
 };
 
 int main(){
     cout << "Order versus Chaos ...\n";
-    board test = board(6);
+    board test = board(9);
     test.printBoard();
 } // main
 
