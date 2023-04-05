@@ -31,8 +31,41 @@
 
 using namespace std;
 
+class board {
+private:
+    int sideLength;
+    string content;
+
+public:
+    board(int length): sideLength(length) {
+        content = "  ";
+        for(int i=0; i<sideLength; i++){
+            content.push_back('1'+i);
+            content.push_back(' ');
+        }
+        content.push_back('\n');
+        // make rows
+        for(int i=0; i<sideLength; i++){
+            // fill each row
+            content.push_back('a'+i);
+            content.push_back(' ');
+            for(int j=0; j<sideLength; j++){
+                content.push_back('.');
+                content.push_back(' ');
+            }
+            content.push_back('\n');
+        }
+    }
+
+    void printBoard() {
+        cout << content << '\n';
+    }
+};
+
 int main(){
     cout << "Order versus Chaos ...\n";
+    board test = board(6);
+    test.printBoard();
 } // main
 
 
