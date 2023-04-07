@@ -67,7 +67,7 @@ public:
     }
 
     // check for 5 in a horizontal row
-    int fiveHoriz(const int& line, const char& c){
+    int horiz(const int& line, const char& c){
         int charsFound = 0;
         for(int i=2; i<content[line].size(); i+=2){
             if(charsFound < 5){
@@ -81,7 +81,7 @@ public:
         return charsFound;
     }
 
-    int fiveVert(const int& col, const char& c){
+    int vert(const int& col, const char& c){
         int charsFound = 0;
         for(int i=1; i<=sideLength; i++){
             if(charsFound < 5){
@@ -95,17 +95,58 @@ public:
         return charsFound;
     }
 
+    int rightSide(int col, const char& c){
+        int charsFound = 0;
+        for(int i=1; i<=sideLength; i++){
+            if(charsFound < 5){
+                if(content[i][col] == c){
+                    charsFound++;
+                } else {
+                    charsFound = 0;
+                }
+                col+=2;
+            }
+        }
+        return charsFound;
+    }
+
+    int leftSide(int col, const char& c){
+        int charsFound = 0;
+        for(int i=1; i<=sideLength; i++){
+            if(charsFound < 5){
+                if(content[i][col] == c){
+                    charsFound++;
+                } else {
+                    charsFound = 0;
+                }
+                col-=2;
+            }
+        }
+        return charsFound;
+    }
+
     // check if order wins
     bool fiveInRow(const char& c){
         // check for 5 in a horizontal row
         for(int i=1; i<=sideLength; i++){
-            if(fiveHoriz(i, c) >= 5){
+            if(horiz(i, c) >= 5){
                 return true;
             }
         }
         // check for 5 in a vertical row
         for(int i=2; i<=content[1].size(); i+=2){
-            if(fiveVert(i, c) >= 5){
+            if(vert(i, c) >= 5){
+                return true;
+            }
+        }
+        // check for five diagonally
+        for(int i=2; i<(content[1].size()-8); i+=2){
+            if(rightSide(i, c) >= 5){
+                return true;
+            }
+        }
+        for(int i=content[1].size()-2; i>9; i-=2){
+            if(leftSide(i, c) >= 5){
                 return true;
             }
         }
@@ -173,11 +214,11 @@ int main(){
     welcomeMsg();
     board test = board(6);
     test.printBoard();
-    test.setPiece("b1X");
-    test.setPiece("c1X");
-    test.setPiece("d1X");
+    test.setPiece("a5X");
+    test.setPiece("b4X");
+    test.setPiece("c3X");
+    test.setPiece("d2X");
     test.setPiece("e1X");
-    test.setPiece("f1X");
     // test.fillBoard();
     test.printBoard();
     cout << test.checkWinner() << endl;
