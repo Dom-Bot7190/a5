@@ -65,6 +65,25 @@ public:
         }
     }
 
+    bool isOver(const int& start) const {
+        if(content[start].find('.') != content[start].npos){
+            return false;
+        } else if(start < sideLength - 1) {
+            return isOver(start+1);
+        } else {
+            return true;
+        }
+    }
+
+    int checkWinner(){
+        if(isOver(0)){
+            // 2 = chaos player wins
+            return 2;
+        }
+        // 0 = no winner yet
+        return 0;
+    }
+
     // getter
     int getGridSz() const {
         return sideLength;
@@ -74,12 +93,23 @@ public:
     void setPiece(const string& input){
         content[input[0]-'a'+1][(input[1]-'0')*2] = input[2];
     }
+
+    // for testing
+    void fillBoard(){
+        for(int i=0; i<content.size(); i++){
+            for(int j=0; j<content[i].length(); j++){
+                if(content[i][j] == '.'){
+                    content[i][j] = 'X';
+                }
+            }
+        }
+    }
 };
 
 void welcomeMsg(){
     cout << "Order versus Chaos ...\n";
 
-    cout << "Goal:Achieve 5 alike characters in a row either vertically, horizontally or digonally\n"; 
+    cout << "Goal:Achieve 5 alike characters in a row either vertically, horizontally or diagonally\n"; 
     cout << "Instructions:" << endl;
     cout << "  1. Choose a square grid size between 6 to 9" << endl;
     cout << "  2. The first player is to enter either an x or o" << endl;
@@ -92,8 +122,7 @@ int main(){
     welcomeMsg();
     board test = board(6);
     test.printBoard();
-    test.setPiece("b5O");
-    test.printBoard();
+    cout << test.checkWinner() << endl;
 } // main
 
 
