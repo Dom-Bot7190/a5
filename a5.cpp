@@ -67,7 +67,7 @@ public:
     }
 
     // check for 5 in a horizontal row
-    bool fiveHoriz(const int& line, const char& c){
+    int fiveHoriz(const int& line, const char& c){
         int charsFound = 0;
         for(int i=2; i<content[line].size(); i+=2){
             if(charsFound < 5){
@@ -78,14 +78,10 @@ public:
                 }
             }
         }
-        if(charsFound >= 5){
-            return true;
-        } else {
-            return false;
-        }
+        return charsFound;
     }
 
-    bool fiveVert(const int& col, const char& c){
+    int fiveVert(const int& col, const char& c){
         int charsFound = 0;
         for(int i=1; i<=sideLength; i++){
             if(charsFound < 5){
@@ -96,24 +92,20 @@ public:
                 }
             }
         }
-        if(charsFound >= 5){
-            return true;
-        } else {
-            return false;
-        }
+        return charsFound;
     }
 
     // check if order wins
     bool fiveInRow(const char& c){
         // check for 5 in a horizontal row
         for(int i=1; i<=sideLength; i++){
-            if(fiveHoriz(i, c)){
+            if(fiveHoriz(i, c) >= 5){
                 return true;
             }
         }
         // check for 5 in a vertical row
         for(int i=2; i<=content[1].size(); i+=2){
-            if(fiveVert(i, c)){
+            if(fiveVert(i, c) >= 5){
                 return true;
             }
         }
@@ -186,6 +178,7 @@ int main(){
     test.setPiece("d1X");
     test.setPiece("e1X");
     test.setPiece("f1X");
+    // test.fillBoard();
     test.printBoard();
     cout << test.checkWinner() << endl;
 } // main
