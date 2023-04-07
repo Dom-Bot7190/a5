@@ -28,6 +28,7 @@
 // You can use any other C++17 standard #includes that you need.
 //
 #include <iostream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -63,10 +64,15 @@ public:
             cout << content[i] << '\n';
         }
     }
-    
+
+    // getter
+    int getGridSz() const {
+        return sideLength;
+    }
+
     // setter
-    void setPiece(int row, int column, char piece){
-        content[row-'a'+1][column*2] = piece;
+    void setPiece(const string& input){
+        content[input[0]-'a'+1][(input[1]-'0')*2] = input[2];
     }
 };
 
@@ -86,7 +92,7 @@ int main(){
     welcomeMsg();
     board test = board(6);
     test.printBoard();
-    test.setPiece('b', 5, 'o');
+    test.setPiece("b5O");
     test.printBoard();
 } // main
 
