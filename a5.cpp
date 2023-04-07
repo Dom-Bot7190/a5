@@ -85,11 +85,35 @@ public:
         }
     }
 
+    bool fiveVert(const int& col, const char& c){
+        int charsFound = 0;
+        for(int i=1; i<=sideLength; i++){
+            if(charsFound < 5){
+                if(content[i][col] == c){
+                    charsFound++;
+                } else {
+                    charsFound = 0;
+                }
+            }
+        }
+        if(charsFound >= 5){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // check if order wins
     bool fiveInRow(const char& c){
         // check for 5 in a horizontal row
         for(int i=1; i<=sideLength; i++){
             if(fiveHoriz(i, c)){
+                return true;
+            }
+        }
+        // check for 5 in a vertical row
+        for(int i=2; i<=content[1].size(); i+=2){
+            if(fiveVert(i, c)){
                 return true;
             }
         }
@@ -157,11 +181,11 @@ int main(){
     welcomeMsg();
     board test = board(6);
     test.printBoard();
+    test.setPiece("b1X");
+    test.setPiece("c1X");
+    test.setPiece("d1X");
+    test.setPiece("e1X");
     test.setPiece("f1X");
-    test.setPiece("f2X");
-    test.setPiece("f3X");
-    test.setPiece("f4X");
-    test.setPiece("f5X");
     test.printBoard();
     cout << test.checkWinner() << endl;
 } // main
