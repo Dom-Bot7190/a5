@@ -66,6 +66,36 @@ public:
         }
     }
 
+    // check for 5 in a horizontal row
+    bool fiveHoriz(const int& line, const char& c){
+        int charsFound = 0;
+        for(int i=2; i<content[line].size(); i+=2){
+            if(charsFound < 5){
+                if(content[line][i] == c){
+                    charsFound++;
+                } else {
+                    charsFound = 0;
+                }
+            }
+        }
+        if(charsFound >= 5){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // check if order wins
+    bool fiveInRow(const char& c){
+        // check for 5 in a horizontal row
+        for(int i=1; i<=sideLength; i++){
+            if(fiveHoriz(i, c)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     // check if board is filled and chaos character wins
     bool isOver(const int& start) const {
         if(content[start].find('.') != content[start].npos){
@@ -78,7 +108,10 @@ public:
     }
 
     int checkWinner(){
-        if(isOver(0)){
+        if(fiveInRow('X') || fiveInRow('O')){
+            // 1 = order player wins
+            return 1;
+        } else if(isOver(0)){
             // 2 = chaos player wins
             return 2;
         }
@@ -124,7 +157,12 @@ int main(){
     welcomeMsg();
     board test = board(6);
     test.printBoard();
-    test.fillBoard();
+    test.setPiece("f1X");
+    test.setPiece("f2X");
+    test.setPiece("f3X");
+    test.setPiece("f4X");
+    test.setPiece("f5X");
+    test.printBoard();
     cout << test.checkWinner() << endl;
 } // main
 
