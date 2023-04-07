@@ -39,6 +39,7 @@ private:
     vector<string> content;
 
 public:
+    // initialize empty board
     board(int length): sideLength(length){
         content.push_back("  ");
         // initialize first row
@@ -65,13 +66,14 @@ public:
         }
     }
 
+    // check if board is filled and chaos character wins
     bool isOver(const int& start) const {
         if(content[start].find('.') != content[start].npos){
             return false;
-        } else if(start < sideLength - 1) {
-            return isOver(start+1);
-        } else {
+        } else if(start >= sideLength) {
             return true;
+        } else {
+            return isOver(start+1);
         }
     }
 
@@ -122,6 +124,7 @@ int main(){
     welcomeMsg();
     board test = board(6);
     test.printBoard();
+    test.fillBoard();
     cout << test.checkWinner() << endl;
 } // main
 
