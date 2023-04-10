@@ -30,6 +30,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
+#include <time.h>
 
 using namespace std;
 
@@ -81,6 +83,7 @@ public:
         return charsFound;
     }
 
+    // check for 5 in a vertical row
     int vert(const int& col, const char& c){
         int charsFound = 0;
         for(int i=1; i<=sideLength; i++){
@@ -95,6 +98,7 @@ public:
         return charsFound;
     }
 
+    // check for 5 in a diagonal row starting from top left and moving right
     int rightSide(int col, const char& c) const {
         int charsFound = 0;
         for(int i=1; i<=sideLength; i++){
@@ -110,6 +114,7 @@ public:
         return charsFound;
     }
 
+    // check for 5 in a diagonal row starting from top right and moving left
     int leftSide(int col, const char& c) const {
         int charsFound = 0;
         for(int i=1; i<=sideLength; i++){
@@ -125,6 +130,7 @@ public:
         return charsFound;
     }
 
+    // check for 5 in a diagonal row starting from row below top left and moving down
     int rightDown(int row, const char& c) const {
         int charsFound = 0;
         int col = 2;
@@ -141,6 +147,7 @@ public:
         return charsFound;
     }
 
+    // check for 5 in a diagonal row starting from row below top right and moving down
     int leftDown(int row, const char& c) const {
         int charsFound = 0;
         int col = content[1].size()-2;
@@ -187,6 +194,7 @@ public:
                 return true;
             }
         }
+        // if no 5 in a rows were found, return false
         return false;
     }
 
@@ -196,9 +204,9 @@ public:
             return false;
         } else if(start >= sideLength) {
             return true;
-        } else {
-            return isOver(start+1);
         }
+        // recursively check each row
+        return isOver(start+1);
     }
 
     int checkWinner(){
@@ -211,6 +219,22 @@ public:
         }
         // 0 = no winner yet
         return 0;
+    }
+
+    void randPlace(){
+        srand(time(0));
+        int col = 0;
+        int row = 0;
+        char randChar = 'X';
+        while(content[row][col] != '.'){
+            row = (rand() % sideLength)+1;
+            col = ((rand() % sideLength)+1)*2;
+        }
+        int randInt = rand() % 2;
+        if(randInt == 0){
+            randChar = 'O';
+        }
+        content[row][col] = randChar;
     }
 
     // getter
@@ -249,14 +273,16 @@ void welcomeMsg(){
 
 int main(){
     welcomeMsg();
-    board test = board(9);
+    board test = board(6);
     test.printBoard();
-    // test.setPiece("e9X");
-    // test.setPiece("f8X");
-    // test.setPiece("g7X");
-    // test.setPiece("h6X");
-    // test.setPiece("i5X");
+    // test.setPiece("a6X");
+    // test.setPiece("b5X");
+    // test.setPiece("c4X");
+    // test.setPiece("e2X");
+    // test.setPiece("f1X");
     test.fillBoard();
+    test.setPiece("f1.");
+    test.randPlace();
     test.printBoard();
     cout << test.checkWinner() << endl;
 } // main
