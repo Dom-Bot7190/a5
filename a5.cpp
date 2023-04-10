@@ -95,9 +95,40 @@ public:
         return charsFound;
     }
 
-    int rightSide(int col, const char& c){
+    int rightSide(int col, const char& c) const {
         int charsFound = 0;
         for(int i=1; i<=sideLength; i++){
+            if(charsFound < 5 && (col < content[1].size())){
+                if(content[i][col] == c){
+                    charsFound++;
+                } else {
+                    charsFound = 0;
+                }
+                col+=2;
+            }
+        }
+        return charsFound;
+    }
+
+    int leftSide(int col, const char& c) const {
+        int charsFound = 0;
+        for(int i=1; i<=sideLength; i++){
+            if(charsFound < 5 && col > 1){
+                if(content[i][col] == c){
+                    charsFound++;
+                } else {
+                    charsFound = 0;
+                }
+                col-=2;
+            }
+        }
+        return charsFound;
+    }
+
+    int rightDown(int row, const char& c) const {
+        int charsFound = 0;
+        int col = 2;
+        for(int i=row; i<=(sideLength); i++){
             if(charsFound < 5){
                 if(content[i][col] == c){
                     charsFound++;
@@ -110,9 +141,10 @@ public:
         return charsFound;
     }
 
-    int leftSide(int col, const char& c){
+    int leftDown(int row, const char& c) const {
         int charsFound = 0;
-        for(int i=1; i<=sideLength; i++){
+        int col = content[1].size()-2;
+        for(int i=row; i<=(sideLength); i++){
             if(charsFound < 5){
                 if(content[i][col] == c){
                     charsFound++;
@@ -127,13 +159,13 @@ public:
 
     // check if order wins
     bool fiveInRow(const char& c){
-        // check for 5 in a horizontal row
+        // check for 5 in a horizontal row in each row
         for(int i=1; i<=sideLength; i++){
             if(horiz(i, c) >= 5){
                 return true;
             }
         }
-        // check for 5 in a vertical row
+        // check for 5 in a vertical row in each column
         for(int i=2; i<=content[1].size(); i+=2){
             if(vert(i, c) >= 5){
                 return true;
@@ -147,6 +179,11 @@ public:
         }
         for(int i=content[1].size()-2; i>9; i-=2){
             if(leftSide(i, c) >= 5){
+                return true;
+            }
+        }
+        for(int i=2; i<=(sideLength-4); i++){
+            if(rightDown(i, c) >= 5 || leftDown(i, c) >= 5){
                 return true;
             }
         }
@@ -212,14 +249,14 @@ void welcomeMsg(){
 
 int main(){
     welcomeMsg();
-    board test = board(6);
+    board test = board(9);
     test.printBoard();
-    test.setPiece("a5X");
-    test.setPiece("b4X");
-    test.setPiece("c3X");
-    test.setPiece("d2X");
-    test.setPiece("e1X");
-    // test.fillBoard();
+    // test.setPiece("e9X");
+    // test.setPiece("f8X");
+    // test.setPiece("g7X");
+    // test.setPiece("h6X");
+    // test.setPiece("i5X");
+    test.fillBoard();
     test.printBoard();
     cout << test.checkWinner() << endl;
 } // main
