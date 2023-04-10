@@ -38,11 +38,18 @@ using namespace std;
 class board {
 private:
     int sideLength;
+    int playerRole;
+    int playerFirst;
     vector<string> content;
 
 public:
     // initialize empty board
     board(int length): sideLength(length){
+        srand(time(0));
+        // 0 = order, 1 = chaos
+        playerRole = rand()%2;
+        // 0 = player first, 1 = player second
+        playerFirst = rand()%2;
         content.push_back("  ");
         // initialize first row
         for(int i=0; i<sideLength; i++){
@@ -221,6 +228,35 @@ public:
         return 0;
     }
 
+    bool checker(const string& input){
+        bool out = true;
+        // check if quit
+        if(input == "n"){
+            return true;
+        }
+        // checking the entry size 
+        if(input.length() != 3){
+            out = false;
+        }
+        // check the entered characters are between a to i
+        if (input[0] < 'a' || input[0] > ('a' + sideLength - 1)){
+            out = false;
+        }
+        // check the second character is a number between 1 to sidelength
+        if(input[1] < '1' || input[1] > sideLength+48){
+            out = false;
+        }
+        // checking for X and O entries
+        if(input[2] != 'X' && input[2] != 'O'){
+            out = false;
+        }
+        // if there is already a piece in the position
+        if(content[input[0]-'a'+1][(input[1]-'0')*2]!='.'){
+            out = false;
+        }
+        return out;
+    }
+
     void randPlace(){
         srand(time(0));
         int col = 0;
@@ -237,6 +273,35 @@ public:
         content[row][col] = randChar;
     }
 
+    void randChecker(){
+        if(playerRole == 0){
+            cout << "You have been randomly assigned to be order\n";
+        } else {
+            cout << "You have been randomly assigned to be chaos\n";
+        }
+        if(playerFirst == 0){
+            cout << "You have been randomly assigned to play first\n";
+        } else {
+            cout << "The computer has been assigned to play first\n";
+            randPlace();
+        }
+    }
+
+    void winMsg(const int& status){
+        if(status == 1){
+            cout << "Order has won, ";
+        } else if(status == 2){
+            cout << "Chaos has won, ";
+        }
+        if(status-1 == playerRole){
+            cout << "you are the winner!\n";
+        } else if(status < 1){
+            cout << "You resigned the game (you lost)\n";
+        } else {
+            cout << "you are the loser!\n";
+        }
+    }
+
     // getter
     int getGridSz() const {
         return sideLength;
@@ -246,21 +311,10 @@ public:
     void setPiece(const string& input){
         content[input[0]-'a'+1][(input[1]-'0')*2] = input[2];
     }
-
-    // for testing
-    void fillBoard(){
-        for(int i=0; i<content.size(); i++){
-            for(int j=0; j<content[i].length(); j++){
-                if(content[i][j] == '.'){
-                    content[i][j] = 'X';
-                }
-            }
-        }
-    }
 };
 
 void welcomeMsg(){
-    cout << "Order versus Chaos ...\n";
+    cout << "\nOrder versus Chaos ...\n";
 
     cout << "Goal:Achieve 5 alike characters in a row either vertically, horizontally or diagonally\n"; 
     cout << "Instructions:" << endl;
@@ -272,19 +326,61 @@ void welcomeMsg(){
 }
 
 int main(){
-    welcomeMsg();
-    board test = board(6);
-    test.printBoard();
-    // test.setPiece("a6X");
-    // test.setPiece("b5X");
-    // test.setPiece("c4X");
-    // test.setPiece("e2X");
-    // test.setPiece("f1X");
-    test.fillBoard();
-    test.setPiece("f1.");
-    test.randPlace();
-    test.printBoard();
-    cout << test.checkWinner() << endl;
+    char choice;
+    string size;
+    string input;
+    bool firstRun = true;
+    // game begins
+    cout << "would you like to play order and chaos? (y/n)" << endl;
+    cin >> choice;
+    while(choice != 'y' && choice != 'n'){
+        cout << "ERROR:Please enter either 'y' or 'n':\n";
+        cin >> choice;
+    }
+    while(choice == 'y'){
+        welcomeMsg();
+        //User size choice
+        string size;
+        cout << "\nEnter the size of grid between 6 to 9: ";
+        cin >> size;
+        while(size[0] <'6' || size[0] > '9' || size.size() > 1){
+            cout << "ERROR:Re-enter the size to be an integer between 6 and 9:";
+            cin >> size;
+        
+        }    
+        board game = board(size[0]-'0');
+        game.randChecker();
+        game.printBoard();
+        while(game.checkWinner()==0){
+            if(!firstRun){
+                cout << "Computer's move:\n";
+                game.randPlace();
+                game.printBoard(); 
+            }
+            cout << "\nInsert your entry with the format of 'a6X' or type n to resign" << endl; 
+            cout << "The entry is:";
+            cin >> input;
+            if(input == "n"){
+                choice = 'n';
+                break;
+            }
+            while(!game.checker(input)){ 
+                cout << "\n";
+                cout << "ERROR:Re-enter using the format 'a6X' using letters and numbers within the above chart\n";
+                cout << "      For example,the format must be letter, number, X or O\n";
+                cout << "      Ensure that there is not already a piece in that position\n";
+                cout << "Your new entry is:"; 
+                cin >> input;
+            }
+            game.setPiece(input);
+            game.printBoard();
+            firstRun = false;
+        }
+        game.winMsg(game.checkWinner());
+        cout << "\nWould you like to play another round? (y/n)\n";
+        cin >> choice;
+    }
+    cout << "Have a wonderful day! Goodbye\n";
 } // main
 
 
